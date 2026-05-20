@@ -40,44 +40,63 @@ let currentView
  */
 
 
+/**
+ * CONTROLADOR CENTRAL DE FONDOS DINÁMICOS
+ */
+function updateLauncherBackground(estado, data = null) {
+    let urlFondoFinal = ''
+    const fallbackBg = 'assets/images/backgrounds/' + (document.body.getAttribute('bkid') || 'Background') + '.jpg'
+
+    switch (estado) {
+        case 'LOGIN':
+            if (data?.rawDistribution?.loginbackground?.startsWith('http')) {
+                urlFondoFinal = data.rawDistribution.loginbackground
+            } else if (data?.rawDistribution?.background?.startsWith('http')) {
+                urlFondoFinal = data.rawDistribution.background
+            } else {
+                urlFondoFinal = fallbackBg
+            }
+            break;
+        case 'MAIN_DEFAULT':
+            if (data?.rawDistribution?.background?.startsWith('http')) {
+                urlFondoFinal = data.rawDistribution.background
+            } else {
+                urlFondoFinal = fallbackBg
+            }
+            break;
+        case 'SERVER_SELECTED':
+            if (data?.rawServer?.background?.startsWith('http')) {
+                urlFondoFinal = data.rawServer.background
+            } else if (data?.rawDistribution?.background?.startsWith('http')) {
+                urlFondoFinal = data.rawDistribution.background
+            } else {
+                urlFondoFinal = fallbackBg
+            }
+            break;
+    }
+
+    if (urlFondoFinal) {
+        document.body.style.backgroundImage = `url('${urlFondoFinal}')`
+    }
+}
+
 function switchView(current, next, currentFadeTime = 500, nextFadeTime = 500, onCurrentFade = () => {}, onNextFade = () => {}){
     currentView = next
 
-    // Consultamos la distribución para cambiar fondos dinámicamente al navegar
     DistroAPI.getDistribution().then(distro => {
-        // --- 1. SI SE ENTRA A PANTALLAS DE LOGIN ---
         if (next === VIEWS.login || next === VIEWS.loginOptions) {
-            if (distro && distro.rawDistribution && distro.rawDistribution.loginbackground) {
-                const bgLoginUrl = distro.rawDistribution.loginbackground
-                if (bgLoginUrl && bgLoginUrl.startsWith('http')) {
-                    document.body.style.backgroundImage = `url('${bgLoginUrl}')`
-                    document.body.style.backgroundSize = 'cover'
-                    document.body.style.backgroundPosition = 'center'
-                }
-            }
-        }
-
-        // --- 2. SI SE REGRESA A LA PANTALLA PRINCIPAL (LANDING) ---
-        if (next === VIEWS.landing) {
+            updateLauncherBackground('LOGIN', distro)
+        } else if (next === VIEWS.landing) {
             const iconoActivo = document.querySelector('.sidebarServerIcon.active')
-            let urlFondoRestaurar = distro?.rawDistribution?.background || null
-            
             if (iconoActivo) {
                 const srvId = iconoActivo.getAttribute('data-id')
                 const srvObj = distro.getServerById(srvId)
-                if (srvObj?.rawServer?.background) {
-                    urlFondoRestaurar = srvObj.rawServer.background
-                }
-            }
-            
-            if (urlFondoRestaurar && urlFondoRestaurar.startsWith('http')) {
-                document.body.style.backgroundImage = `url('${urlFondoRestaurar}')`
+                updateLauncherBackground('SERVER_SELECTED', srvObj)
             } else {
-                const fallbackBg = document.body.getAttribute('bkid') || 'Background'
-                document.body.style.backgroundImage = `url('assets/images/backgrounds/${fallbackBg}.jpg')`
+                updateLauncherBackground('MAIN_DEFAULT', distro)
             }
         }
-    }).catch(err => console.error("Error al gestionar fondos en switchView:", err))
+    }).catch(err => console.error('Error al cambiar fondo en switchView:', err))
 
     $(`${current}`).fadeOut(currentFadeTime, () => {
         onCurrentFade()
@@ -98,7 +117,6 @@ function getCurrentView(){
 }
 
 async function showMainUI(data){
-
     if(!isDev){
         loggerAutoUpdater.info('Initializing..')
         ipcRenderer.send('autoUpdateAction', 'initAutoUpdater', ConfigManager.getAllowPrerelease())
@@ -106,38 +124,27 @@ async function showMainUI(data){
 
     await prepareSettings(true)
     
-    // 1. Helios carga el servidor guardado 
-    // (Esto intenta poner el fondo del servidor, pero lo vamos a aplastar enseguida)
     updateSelectedServer(data.getServerById(ConfigManager.getSelectedServer()))
     refreshServerStatus()
     
-    // 2. APLASTAMOS EL FONDO INMEDIATAMENTE (Bajo la pantalla de carga)
     const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0
 
     if (!isLoggedIn) {
-        // SI NO HAY CUENTA: Forzamos el fondo de Login de tu JSON
-        if (data && data.rawDistribution && data.rawDistribution.loginbackground && data.rawDistribution.loginbackground.startsWith('http')) {
-            document.body.style.backgroundImage = `url('${data.rawDistribution.loginbackground}')`
-        } else {
-            let urlFondoFinal = 'assets/images/backgrounds/' + document.body.getAttribute('bkid') + '.jpg'
-            if (data && data.rawDistribution && data.rawDistribution.background && data.rawDistribution.background.startsWith('http')) {
-                urlFondoFinal = data.rawDistribution.background
-            }
-            document.body.style.backgroundImage = `url('${urlFondoFinal}')`
-        }
+        updateLauncherBackground('LOGIN', data)
     } else {
-        // SI YA ESTÁ LOGEADO: Forzamos el fondo general del Cliente
-        let urlFondoFinal = 'assets/images/backgrounds/' + document.body.getAttribute('bkid') + '.jpg'
-        if (data && data.rawDistribution && data.rawDistribution.background && data.rawDistribution.background.startsWith('http')) {
-            urlFondoFinal = data.rawDistribution.background
+        const savedServerId = ConfigManager.getSelectedServer()
+        const savedServerObj = data.getServerById(savedServerId)
+        if (savedServerObj) {
+            updateLauncherBackground('SERVER_SELECTED', savedServerObj)
+        } else {
+            updateLauncherBackground('MAIN_DEFAULT', data)
         }
-        document.body.style.backgroundImage = `url('${urlFondoFinal}')`
     }
+
     document.body.style.backgroundSize = 'cover'
     document.body.style.backgroundPosition = 'center'
     document.body.style.backgroundRepeat = 'no-repeat'
 
-    // 3. PROCESOS NATIVOS DE HELIOS (Intactos y estables)
     setTimeout(() => {
         document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
         $('#main').show()
@@ -167,9 +174,7 @@ async function showMainUI(data){
                 $('#loadSpinnerImage').removeClass('rotating')
             })
         }, 250)
-        
     }, 750)
-    
 }
 
 function showFatalStartupError(){

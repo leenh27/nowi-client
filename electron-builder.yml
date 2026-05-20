@@ -1,11 +1,16 @@
 appId: 'nowi-client'
 productName: 'Nowi Client'
-artifactName: '${productName}-setup-${version}.${ext}'
+artifactName: 'setup-${version}.${ext}'
 
 copyright: 'Copyright © 2026 leenh27'
 
 asar: true
 compression: 'maximum'
+
+publish:
+  provider: github
+  owner: leenh27
+  repo: nowi-client
 
 files:
   - '!{dist,.gitignore,.vscode,docs,dev-app-update.yml,.nvmrc,eslint.config.mjs}'
@@ -18,6 +23,7 @@ win:
   target: 
     - target: 'nsis'
       arch: 'x64'
+  icon: app/assets/images/icon.ico # <-- AQUÍ LE DICES DÓNDE ESTÁ TU ICONO
 
 # Windows Installer Configuration
 nsis:

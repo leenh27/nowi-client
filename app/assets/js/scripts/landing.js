@@ -149,7 +149,7 @@ function updateSelectedAccount(authUser){
             username = authUser.displayName
         }
         if(authUser.uuid != null){
-            document.getElementById('avatarContainer').style.backgroundImage = `url('https://mc-heads.net/body/${authUser.uuid}/right')`
+            document.getElementById('avatarContainer').style.backgroundImage = `url('https://mc-heads.net/avatar/${authUser.uuid}')`
         }
     }
     user_text.innerHTML = username
@@ -212,33 +212,30 @@ async function initSidebarServers() {
             }
 
             // --- SISTEMA INTERRUPTOR (TOGGLE) DE UN CLICK ---
-            iconDiv.onclick = async () => {
-                const yaEstabaActivo = iconDiv.classList.contains('active')
-
-                // Apagamos todos los iconos de la barra lateral por igual
-                document.querySelectorAll('.sidebarServerIcon').forEach(el => el.classList.remove('active'))
-
-                if (yaEstabaActivo) {
-                    // --- ACCIÓN: DESELECCIONAR ---
+            iconDiv.onclick = (e) => {
+                if(e.target.classList.contains('sidebarServerIcon') && !e.target.classList.contains('active')){
+                    
+                    // 1. Lógica nativa de Helios: Cambiar clases activas (¡NO LA TOCAMOS!)
+                    const currentActive = document.querySelector('.sidebarServerIcon.active')
+                    if(currentActive){
+                        currentActive.classList.remove('active')
+                    }
+                    iconDiv.classList.add('active')
+                    
+                    // 2. Obtener el objeto del servidor seleccionado
+                    const srvObj = distro.getServerById(e.target.getAttribute('data-id'))
+                    updateSelectedServer(srvObj)
+                    
+                    // 3. OPTIMIZACIÓN: Invocamos al controlador central en lugar de escribir código CSS aquí
+                    updateLauncherBackground('SERVER_SELECTED', srvObj)
+                    
+                } else if(e.target.classList.contains('sidebarServerIcon') && e.target.classList.contains('active')){
+                    // Si hace clic en el que ya está activo (Deseleccionar)
+                    e.target.classList.remove('active')
                     updateSelectedServer(null)
                     
-                    const fondoPredeterminadoUrl = distro.rawDistribution.background || null
-                    if (fondoPredeterminadoUrl && fondoPredeterminadoUrl.startsWith('http')) {
-                        document.body.style.backgroundImage = `url('${fondoPredeterminadoUrl}')`
-                    } else {
-                        document.body.style.backgroundImage = `url('assets/images/backgrounds/${document.body.getAttribute('bkid')}.jpg')`
-                    }
-                } else {
-                    // --- ACCIÓN: SELECCIONAR ---
-                    iconDiv.classList.add('active') 
-
-                    const fullServerObj = distro.getServerById(srv.id)
-                    updateSelectedServer(fullServerObj)
-
-                    // Cambiamos al fondo del servidor seleccionado (LIMPIO)
-                    if (fondoUrl && fondoUrl.startsWith('http')) {
-                        document.body.style.backgroundImage = `url('${fondoUrl}')`
-                    }
+                    // OPTIMIZACIÓN: Volvemos al fondo predeterminado de la distribución limpiamente
+                    updateLauncherBackground('MAIN_DEFAULT', distro)
                 }
             }
 
