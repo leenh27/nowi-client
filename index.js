@@ -227,10 +227,6 @@ function createWindow() {
     win = new BrowserWindow({
         width: 980,
         height: 552,
-        minWidth: 975,   /* Evita que se encoja y se rompan los botones */
-        minHeight: 550,
-        maxWidth: 975,   /* Bloquea el estiramiento tosco en pantallas gigantes */
-        maxHeight: 550,
         icon: getPlatformIcon('SealCircle'),
         frame: false,
         webPreferences: {

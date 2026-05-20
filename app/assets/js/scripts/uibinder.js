@@ -38,70 +38,12 @@ let currentView
  * @param {*} onNextFade Optional. Callback function to execute when the next view
  * fades in.
  */
-
-
-/**
- * CONTROLADOR CENTRAL DE FONDOS DINÁMICOS
- */
-function updateLauncherBackground(estado, data = null) {
-    let urlFondoFinal = ''
-    const fallbackBg = 'assets/images/backgrounds/' + (document.body.getAttribute('bkid') || 'Background') + '.jpg'
-
-    switch (estado) {
-        case 'LOGIN':
-            if (data?.rawDistribution?.loginbackground?.startsWith('http')) {
-                urlFondoFinal = data.rawDistribution.loginbackground
-            } else if (data?.rawDistribution?.background?.startsWith('http')) {
-                urlFondoFinal = data.rawDistribution.background
-            } else {
-                urlFondoFinal = fallbackBg
-            }
-            break;
-        case 'MAIN_DEFAULT':
-            if (data?.rawDistribution?.background?.startsWith('http')) {
-                urlFondoFinal = data.rawDistribution.background
-            } else {
-                urlFondoFinal = fallbackBg
-            }
-            break;
-        case 'SERVER_SELECTED':
-            if (data?.rawServer?.background?.startsWith('http')) {
-                urlFondoFinal = data.rawServer.background
-            } else if (data?.rawDistribution?.background?.startsWith('http')) {
-                urlFondoFinal = data.rawDistribution.background
-            } else {
-                urlFondoFinal = fallbackBg
-            }
-            break;
-    }
-
-    if (urlFondoFinal) {
-        document.body.style.backgroundImage = `url('${urlFondoFinal}')`
-    }
-}
-
 function switchView(current, next, currentFadeTime = 500, nextFadeTime = 500, onCurrentFade = () => {}, onNextFade = () => {}){
     currentView = next
-
-    DistroAPI.getDistribution().then(distro => {
-        if (next === VIEWS.login || next === VIEWS.loginOptions) {
-            updateLauncherBackground('LOGIN', distro)
-        } else if (next === VIEWS.landing) {
-            const iconoActivo = document.querySelector('.sidebarServerIcon.active')
-            if (iconoActivo) {
-                const srvId = iconoActivo.getAttribute('data-id')
-                const srvObj = distro.getServerById(srvId)
-                updateLauncherBackground('SERVER_SELECTED', srvObj)
-            } else {
-                updateLauncherBackground('MAIN_DEFAULT', distro)
-            }
-        }
-    }).catch(err => console.error('Error al cambiar fondo en switchView:', err))
-
-    $(`${current}`).fadeOut(currentFadeTime, () => {
-        onCurrentFade()
-        $(`${next}`).fadeIn(nextFadeTime, () => {
-            onNextFade()
+    $(`${current}`).fadeOut(currentFadeTime, async () => {
+        await onCurrentFade()
+        $(`${next}`).fadeIn(nextFadeTime, async () => {
+            await onNextFade()
         })
     })
 }
@@ -111,44 +53,29 @@ function switchView(current, next, currentFadeTime = 500, nextFadeTime = 500, on
  * 
  * @returns {string} The currently shown view container.
  */
-
 function getCurrentView(){
     return currentView
 }
 
 async function showMainUI(data){
+
     if(!isDev){
         loggerAutoUpdater.info('Initializing..')
         ipcRenderer.send('autoUpdateAction', 'initAutoUpdater', ConfigManager.getAllowPrerelease())
     }
 
     await prepareSettings(true)
-    
     updateSelectedServer(data.getServerById(ConfigManager.getSelectedServer()))
     refreshServerStatus()
-    
-    const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0
-
-    if (!isLoggedIn) {
-        updateLauncherBackground('LOGIN', data)
-    } else {
-        const savedServerId = ConfigManager.getSelectedServer()
-        const savedServerObj = data.getServerById(savedServerId)
-        if (savedServerObj) {
-            updateLauncherBackground('SERVER_SELECTED', savedServerObj)
-        } else {
-            updateLauncherBackground('MAIN_DEFAULT', data)
-        }
-    }
-
-    document.body.style.backgroundSize = 'cover'
-    document.body.style.backgroundPosition = 'center'
-    document.body.style.backgroundRepeat = 'no-repeat'
-
     setTimeout(() => {
         document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
+        document.body.style.backgroundImage = `url('assets/images/backgrounds/${document.body.getAttribute('bkid')}.jpg')`
         $('#main').show()
 
+        const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0
+
+        // If this is enabled in a development environment we'll get ratelimited.
+        // The relaunch frequency is usually far too high.
         if(!isDev && isLoggedIn){
             validateSelectedAccount()
         }
@@ -174,7 +101,12 @@ async function showMainUI(data){
                 $('#loadSpinnerImage').removeClass('rotating')
             })
         }, 250)
+        
     }, 750)
+    // Disable tabbing to the news container.
+    initNews().then(() => {
+        $('#newsContainer *').attr('tabindex', '-1')
+    })
 }
 
 function showFatalStartupError(){
@@ -203,6 +135,7 @@ function showFatalStartupError(){
 function onDistroRefresh(data){
     updateSelectedServer(data.getServerById(ConfigManager.getSelectedServer()))
     refreshServerStatus()
+    initNews()
     syncModConfigurations(data)
     ensureJavaSettings(data)
 }
