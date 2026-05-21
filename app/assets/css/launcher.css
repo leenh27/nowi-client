@@ -22,6 +22,21 @@
     src: url('../fonts/Ringbearer.ttf');
 }
 
+@font-face {
+    font-family: 'Corbel Regular';
+    src: url('../fonts/corbel-regular.ttf');
+}
+
+@font-face {
+    font-family: 'Corbel Light';
+    src: url('../fonts/corbel-light.ttf');
+}
+
+@font-face {
+    font-family: 'Microsoft Himalaya';
+    src: url('../fonts/himalaya.ttf');
+}
+
 /*******************************************************************************
  *                                                                             *
  * Element Styles                                                              *
@@ -42,7 +57,7 @@ p {
 
 /* Set default font and color. */
 body, button {
-    font-family: 'Avenir Book';
+    font-family: 'corbel-light';
     color: white;
 }
 
@@ -2450,7 +2465,7 @@ input:checked + .toggleSwitchSlider:before {
     height: 100%;
     position: relative;
     transition: background 2s ease;
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
 /* Upper content container. */
@@ -2473,7 +2488,7 @@ input:checked + .toggleSwitchSlider:before {
     height: 100%;
 }
 #landingContainer > #upper > #right {
-    display: inline-flex;
+    display: inline-grid;
     width: 15%;
     height: 100%;
 }
@@ -2530,23 +2545,50 @@ input:checked + .toggleSwitchSlider:before {
  *                                                                             *
  ******************************************************************************/
 
+/* Contenedor del encabezado de imagen */
+#newsHeaderImage {
+    width: 100%;
+    padding: 20px 20px 5px 20px; /* Espacio interno superior y lateral */
+    display: flex;
+    justify-content: center; /* Alinea la imagen a la izquierda */
+    box-sizing: border-box;
+    flex-shrink: 0; /* Evita que la imagen se aplaste si hay mucho texto abajo */
+}
+
+/* Tamaño de la imagen de Novedades */
+#newsTitleLogo {
+    height: 60px; /* Ajusta este valor si la imagen se ve muy grande o pequeña */
+    width: auto;
+    object-fit: fill;
+}
+
 /* Main container. */
 #newsContainer {
     position: absolute;
-    top: 100%;
-    height: 100%;
-    width: 100%;
-    transition: top 2s ease;
+    top: 20px; /* CORREGIDO: Siempre saldrá de la esquina superior, sin importar la pantalla */
+    right: -450px;
+    height: calc(100vh - 40px); /* CORREGIDO: Se adapta al tamaño vertical de la ventana dejando un margen limpio */
+    max-height: 620px; /* Tamaño máximo ideal para que no sea gigante en monitores enormes */
+    width: 320px;
+    transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     display: flex;
-    align-items: flex-end;
-    justify-content: center;
+    flex-direction: column;
+    background: rgba(15, 15, 15, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    z-index: 100;
+    box-sizing: border-box;
+    overflow: hidden; 
+    box-shadow: -5px 5px 20px rgba(0, 0, 0, 0.6);
 }
 
 /* News content container. */
 #newsContent {
-    height: 82vh;
+    flex-grow: 1; /* NUEVO: Ocupa el espacio sobrante debajo de la imagen */
+    height: auto; /* NUEVO: Permite que se adapte correctamente */
     width: 100%;
     display: flex;
+    flex-direction: column;
     -webkit-user-select: initial;
     position: relative;
 }
@@ -2560,46 +2602,54 @@ input:checked + .toggleSwitchSlider:before {
     position: absolute;
     opacity: 0;
     transition: opacity 0.25s ease;
+    z-index: 10;
 }
+
 #newsContent[scrolled]:before {
     opacity: 1;
 }
 
-/* News article status container (left). */
+/* News article status container (Top Header now). */
 #newsStatusContainer {
-    width: calc(30% - 60px);
-    height: calc(100% - 30px);
-    padding: 15px 15px 15px 45px;
+    width: 100%; /* CORREGIDO: De 350px a 100% para que respete el contenedor de 320px */
+    box-sizing: border-box; /* Evita que el padding interno sume ancho al contenedor */
+    height: auto;
+    padding: 15px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.4);
 }
 
 /* News status content. */
 #newsStatusContent {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: center; /* CORREGIDO: Centra perfectamente los elementos flex hacia el eje medio */
+    width: 100%;
 }
 
 /* News title wrapper. */
 #newsTitleContainer {
     display: flex;
-    max-width: 90%;
+    justify-content: center; /* CORREGIDO: Centra el contenedor del título */
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 5px;
 }
 
-/* News article title styles. */
 #newsArticleTitle {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
-    font-family: 'Avenir Medium';
+    font-family: 'himalaya';
     color: white;
     text-decoration: none;
     transition: 0.25s ease;
     outline: none;
-    text-align: right;
+    text-align: center; /* CORREGIDO: Fuerza el centrado del texto de la noticia */
+    width: 100%;
 }
+
 #newsArticleTitle:hover,
 #newsArticleTitle:focus {
     text-shadow: 0px 0px 20px white;
@@ -2609,10 +2659,13 @@ input:checked + .toggleSwitchSlider:before {
     text-shadow: 0px 0px 20px #c7c7c7;
 }
 
-/* News meta container. */
 #newsMetaContainer {
     display: flex;
-    flex-direction: column;
+    flex-direction: row; 
+    justify-content: center; /* CORREGIDO: Centra las pastillas de Fecha y Autor juntas */
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
 }
 
 /* Date and author wrappers. */
@@ -2641,13 +2694,15 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Author styles. */
 #newsArticleAuthor {
-    background: #a02d2a;
+    background: white;
+    color: black;
+    margin-top: 5px;
 }
 
 /* News article comments styles. */
 #newsArticleComments {
     margin-top: 5px;
-    display: inline-block;
+    display: none;
     font-size: 10px;
     color: #ffffff;
     text-decoration: none;
@@ -2663,19 +2718,23 @@ input:checked + .toggleSwitchSlider:before {
     color: #c7c7c7;
 }
 
-/* Article content container (right). */
+/* Article content container (Bottom Content now). */
 #newsArticleContainer {
-    width: calc(100% - 25px);
+    width: 100%;
     height: 100%;
-    margin: 0px 0px 0px 25px;
+    margin: 0; /* Quitamos el margen izquierdo viejo */
+    padding-top: 10px;
+    flex-grow: 1;
+    overflow: hidden;
 }
 
 /* Article content styles. */
 #newsArticleContentScrollable {
     font-size: 12px;
-    overflow-y: scroll;
+    overflow-y: auto; /* Cambiado a auto para que la barra solo salga si es necesario */
     height: 100%;
     padding: 0px 15px 0px 15px;
+    box-sizing: border-box; /* CORREGIDO: Mantiene el texto alineado estrictamente dentro del scroll */
 }
 #newsArticleContentScrollable img,
 #newsArticleContentScrollable iframe {
@@ -2732,7 +2791,8 @@ input:checked + .toggleSwitchSlider:before {
 
 
 #newsArticleContentWrapper {
-    width: 80%;
+    width: 100%;
+    align-items: center;
 }
 
 .newsArticleSpacerTop {
@@ -2749,15 +2809,16 @@ input:checked + .toggleSwitchSlider:before {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 10px;
+    margin-top: 10px;
     -webkit-user-select: none;
-    position: absolute;
-    bottom: 15px;
-    right: 0px;
+    position: sticky; /* Lo integramos en el flujo normal, no absolute */
+    bottom: 20px;
+    right: 0;
 }
 
 /* Navigation status span. */
 #newsNavigationStatus {
+    font-family: 'corbel-regular';
     font-size: 12px;
     margin: 0px 15px;
 }
@@ -2951,11 +3012,11 @@ input:checked + .toggleSwitchSlider:before {
 
 /*  Wrapper container for top, right content. */
 #rightContainer {
+    align-items: center;
     display: flex;
     flex-direction: column;
     position: relative;
-    top: 50px;
-    align-items: flex-start;
+    top: 10px;
     height: calc(100% - 50px);
 }
 
@@ -3078,7 +3139,7 @@ input:checked + .toggleSwitchSlider:before {
 }
 
 /* Internal media button shared styles. */
-.mediaButton {
+.menuButton {
     background: none;
     border: none;
     padding: 0px;
@@ -3096,82 +3157,12 @@ input:checked + .toggleSwitchSlider:before {
     stroke: #ffffff;
     height: 15px;
 }
-.mediaButton:hover #settingsSVG,
-.mediaButton:focus #settingsSVG,
-.mediaButton:active #settingsSVG {
+.menuButton:hover #settingsSVG,
+.menuButton:focus #settingsSVG,
+.menuButton:active #settingsSVG {
     height: 23px;
 }
 
-/* Settings tooltip styles. */
-#settingsTooltip {
-    visibility: hidden;
-    opacity: 0;
-    width: 75px;
-    height: 20px;
-    background-color: rgba(0, 0, 0, 0.75);
-    text-align: center;
-    border-radius: 4px;
-    position: absolute;
-    z-index: 1;
-    right: 130%;
-    font-size: 12px;
-    line-height: 20px;
-    transition: visibility 0s linear 0.25s, opacity 0.25s ease;
-}
-#settingsTooltip::after {
-    content: " ";
-    position: absolute;
-    top: 50%;
-    left: 100%;
-    margin-top: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: transparent transparent transparent rgba(0, 0, 0, 0.75);
-}
-.mediaButton:hover #settingsTooltip,
-.mediaButton:focus #settingsTooltip,
-.mediaButton:active #settingsTooltip {
-    visibility: visible;
-    opacity: 1;
-    transition-delay:0s;
-}
-
-/* X icon colors. */
-#xSVG:hover,
-#xURL:focus #xSVG {
-    fill: #000000;
-}
-#xSVG:active {
-    fill: #090909;
-}
-
-/* Instagram icon colors. */
-#instagramSVG:hover,
-#instagramURL:focus #instagramSVG {
-    fill: url('#instaFill')
-    /*fill: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); */
-}
-#instagramSVG:active {
-    fill: url('#instaFill')
-}
-
-/* Youtube icon colors. */
-#youtubeSVG:hover,
-#youtubeURL:focus #youtubeSVG {
-    fill: #f00;
-}
-#youtubeSVG:active {
-    fill: #ea0202;
-}
-
-/* Discord icon colors. */
-#discordSVG:hover,
-#discordURL:focus #discordSVG {
-    fill: #7288d9;
-}
-#discordSVG:active {
-    fill: #657ac4;
-}
 
 /*******************************************************************************
  *                                                                             *
@@ -3324,14 +3315,27 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Button which opens the news view. */
 #newsButton {
+    position: absolute;
     background: none;
     border: none;
     cursor: pointer;
     outline: none;
-}
-#newsButton:hover #newsButtonText,
-#newsButton:focus #newsButtonText {
-    text-shadow: 0px 0px 20px #fff, 0px 0px 20px #fff;
+    padding: 0;
+    transition: opacity 0.3s ease;
+
+    /* ANCLAJE INAMOVIBLE A LA ESQUINA */
+    position: absolute;
+    top: 15px; /* Exactamente a la misma altura que tu menú de noticias */
+    right: 25px; /* Pegado a la derecha, ajústalo si lo quieres aún más al borde (ej. 15px) */
+    z-index: 99; /* Asegura que nada lo tape jamás */
+
+    /* ESTÁNDAR DE TAMAÑO (No cambiará al redimensionar) */
+    width: 60px;
+    height: 60px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 #newsButton:active {
     color: #c7c7c7;
@@ -3342,44 +3346,35 @@ input:checked + .toggleSwitchSlider:before {
 #newsButton:focus #newsButtonSVG {
     -webkit-filter: drop-shadow(0px 0px 2px #fff);
 }
-#newsButton:active #newsButtonSVG .arrowLine {
-    stroke: #c7c7c7;
-}
 #newsButton:active #newsButtonSVG {
+    stroke: #c7c7c7;
     -webkit-filter: drop-shadow(0px 0px 2px #c7c7c7);
 }
-#newsButton:disabled #newsButtonSVG .arrowLine {
+#newsButton:disabled #newsButtonSVG {
     stroke: rgba(255, 255, 255, 0.75);
 }
 
 /* Icon which indicates there is new news. */
 #newsButtonAlert {
-    width: 5px;
-    height: 5px;
+    width: 8px;
+    height: 8px;
     position: absolute;
     border-radius: 50%;
     background: red;
-    right: -1px;
-    top: 50%;
+    right: -2px;
+    top: -2px; /* Reubicado a la esquina superior del botón para que se vea mejor */
 }
 
 /* Arrow image which floats above the news button. */
 #newsButtonSVG {
-    height: 11px;
-    margin-left: -2px;
-    transition: 0.25s ease;
-}
-
-/* Span which contains the news button text. */
-#newsButtonText {
-    color: white;
-    font-weight: 900;
-    letter-spacing: 2px;
-    text-shadow: 0px 0px 0px #bebcbb;
-    font-size: 11px;
-    line-height: 30px;
-    display: flex;
-    transition: 0.25s ease;
+    background: rgba(0, 0, 0, 0.1);
+    width: 60px;
+    height: 60px;
+box-sizing: border-box;
+    border: 2px solid white;
+    border-radius: 4px;
+    padding: 12px;
+    transition: 0.3s;
 }
 
 /* * *

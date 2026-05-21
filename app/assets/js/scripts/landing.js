@@ -128,7 +128,7 @@ document.getElementById('launch_button').addEventListener('click', async e => {
 })
 
 // Bind settings button
-document.getElementById('settingsMediaButton').onclick = async e => {
+document.getElementById('settingsButton').onclick = async e => {
     await prepareSettings()
     switchView(getCurrentView(), VIEWS.settings)
 }
@@ -149,7 +149,7 @@ function updateSelectedAccount(authUser){
             username = authUser.displayName
         }
         if(authUser.uuid != null){
-            document.getElementById('avatarContainer').style.backgroundImage = `url('https://mc-heads.net/body/${authUser.uuid}/right')`
+            document.getElementById('avatarContainer').style.backgroundImage = `url('https://mc-heads.net/avatar/${authUser.uuid}/')`
         }
     }
     user_text.innerHTML = username
@@ -645,7 +645,6 @@ const newsContent                   = document.getElementById('newsContent')
 const newsArticleTitle              = document.getElementById('newsArticleTitle')
 const newsArticleDate               = document.getElementById('newsArticleDate')
 const newsArticleAuthor             = document.getElementById('newsArticleAuthor')
-const newsArticleComments           = document.getElementById('newsArticleComments')
 const newsNavigationStatus          = document.getElementById('newsNavigationStatus')
 const newsArticleContentScrollable  = document.getElementById('newsArticleContentScrollable')
 const nELoadSpan                    = document.getElementById('nELoadSpan')
@@ -656,52 +655,69 @@ let newsGlideCount = 0
 
 /**
  * Show the news UI via a slide animation.
- * 
- * @param {boolean} up True to slide up, otherwise false. 
+ * * @param {boolean} up True to slide up, otherwise false. 
  */
 function slide_(up){
-    const lCUpper = document.querySelector('#landingContainer > #upper')
-    const lCLLeft = document.querySelector('#landingContainer > #lower > #left')
-    const lCLCenter = document.querySelector('#landingContainer > #lower > #center')
-    const lCLRight = document.querySelector('#landingContainer > #lower > #right')
-    const newsBtn = document.querySelector('#landingContainer > #lower > #center #content')
     const landingContainer = document.getElementById('landingContainer')
-    const newsContainer = document.querySelector('#landingContainer > #newsContainer')
-
-    newsGlideCount++
+    const newsContainer = document.getElementById('newsContainer') // Búsqueda directa del ID
+    const newsButton = document.getElementById('newsButton') // Buscamos el botón
+    
+    // Feedback opcional de la flecha SVG de tu botón
+    const newsToggleSVG = document.getElementById('newsButtonSVG')
 
     if(up){
-        lCUpper.style.top = '-200vh'
-        lCLLeft.style.top = '-200vh'
-        lCLCenter.style.top = '-200vh'
-        lCLRight.style.top = '-200vh'
-        newsBtn.style.top = '130vh'
-        newsContainer.style.top = '0px'
-        //date.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'})
-        //landingContainer.style.background = 'rgba(29, 29, 29, 0.55)'
-        landingContainer.style.background = 'rgba(0, 0, 0, 0.50)'
-        setTimeout(() => {
-            if(newsGlideCount === 1){
-                lCLCenter.style.transition = 'none'
-                newsBtn.style.transition = 'none'
-            }
-            newsGlideCount--
-        }, 2000)
+        // ABRIR MENÚ: Desliza el contenedor desde la derecha
+        newsContainer.style.right = '20px'
+        
+        // Oscurece ligeramente el fondo general
+        landingContainer.style.background = 'rgba(0, 0, 0, 0.40)'
+
+        // HACER DESAPARECER EL BOTÓN
+        if(newsButton) {
+            newsButton.style.opacity = '0';
+            newsButton.style.pointerEvents = 'none'; // Evita que se clickee cuando es invisible
+            newsButton.style.transition = 'opacity 0.3s ease'; // Añade un fade suave
+        }
+        
+        // Gira la flechita del botón de noticias
+        if(newsToggleSVG) newsToggleSVG.style.transform = 'rotate(180deg)'
     } else {
-        setTimeout(() => {
-            newsGlideCount--
-        }, 2000)
+        // CERRAR MENÚ: Esconde el contenedor hacia la derecha
+        newsContainer.style.right = '-450px'
+        
+        // Restaura el fondo
         landingContainer.style.background = null
-        lCLCenter.style.transition = null
-        newsBtn.style.transition = null
-        newsContainer.style.top = '100%'
-        lCUpper.style.top = '0px'
-        lCLLeft.style.top = '0px'
-        lCLCenter.style.top = '0px'
-        lCLRight.style.top = '0px'
-        newsBtn.style.top = '10px'
+
+        // HACER APARECER EL BOTÓN NUEVAMENTE
+        if(newsButton) {
+            newsButton.style.opacity = '1';
+            newsButton.style.pointerEvents = 'auto'; // Vuelve a ser clickeable
+        }
+        
+        if(newsToggleSVG) newsToggleSVG.style.transform = 'rotate(0deg)'
     }
 }
+
+/**
+ * CERRAR MENÚ AL CLICKEAR AFUERA
+ */
+document.addEventListener('click', (e) => {
+    // Solo nos importa si el menú de noticias está abierto
+    if (newsActive) {
+        const newsContainer = document.getElementById('newsContainer');
+        const newsButton = document.getElementById('newsButton');
+        
+        // Verificamos si el lugar donde se hizo click NO está dentro del menú de noticias
+        // y tampoco es el botón original de noticias
+        const isClickInsideMenu = newsContainer && newsContainer.contains(e.target);
+        const isClickOnButton = newsButton && newsButton.contains(e.target);
+
+        if (!isClickInsideMenu && !isClickOnButton) {
+            // Reutilizamos el click del botón original para que ejecute el cerrado correctamente
+            document.getElementById('newsButton').click();
+        }
+    }
+});
 
 // Bind news button.
 document.getElementById('newsButton').onclick = () => {
@@ -939,8 +955,6 @@ function displayArticle(articleObject, index){
     newsArticleTitle.href = articleObject.link
     newsArticleAuthor.innerHTML = 'by ' + articleObject.author
     newsArticleDate.innerHTML = articleObject.date
-    newsArticleComments.innerHTML = articleObject.comments
-    newsArticleComments.href = articleObject.commentsLink
     newsArticleContentScrollable.innerHTML = '<div id="newsArticleContentWrapper"><div class="newsArticleSpacerTop"></div>' + articleObject.content + '<div class="newsArticleSpacerBot"></div></div>'
     Array.from(newsArticleContentScrollable.getElementsByClassName('bbCodeSpoilerButton')).forEach(v => {
         v.onclick = () => {
