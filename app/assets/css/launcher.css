@@ -2482,10 +2482,11 @@ input:checked + .toggleSwitchSlider:before {
     height: 100%;
     justify-content: flex-end;
 }
-#landingContainer > #upper > #content {
+#landingContainer > #upper > #center {
     display: inline-flex;
     width: 70%;
     height: 100%;
+    justify-content: center;    
 }
 #landingContainer > #upper > #right {
     display: inline-grid;
@@ -2504,7 +2505,7 @@ input:checked + .toggleSwitchSlider:before {
     transition: top 2s ease;
     top: 0px;
     height: 100%;
-    width: 33%;
+    width: 15%;
     display: inline-flex;
     justify-content: center;
 }
@@ -2520,7 +2521,7 @@ input:checked + .toggleSwitchSlider:before {
     transition: top 2s ease;
     top: 0px;
     height: 100%;
-    width: 34%;
+    width: 70%;
     display: inline-flex;
     justify-content: center;
 }
@@ -2535,7 +2536,7 @@ input:checked + .toggleSwitchSlider:before {
     transition: top 2s ease;
     top: 0px;
     height: 100%;
-    width: 33%;
+    width: 15%;
     display: inline-flex;
 }
 
@@ -3031,13 +3032,9 @@ input:checked + .toggleSwitchSlider:before {
 
 /* User profile avatar container. */
 #avatarContainer {
-    border-radius: 50%;
-    border: 2px solid #cad7e1;
-    box-sizing: border-box;
-    background: rgba(1, 2, 1, 0.5);
-    height: 70px;
-    width: 70px;
-    box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+    background: none;
+    height: 35px;
+    width: 35px;
     overflow: hidden;
     position: relative;
     background-position: center;
@@ -3048,11 +3045,9 @@ input:checked + .toggleSwitchSlider:before {
 /* Avatar edit overlay. */
 #avatarOverlay {
     opacity: 0;
-    position: absolute;
+    position: relative;
     z-index: 1;
     display: flex;
-    justify-content: center;
-    align-items: center;
     transition: 0.25s ease;
     font-weight: bold;
     letter-spacing: 2px;
@@ -3062,7 +3057,7 @@ input:checked + .toggleSwitchSlider:before {
     cursor: pointer;
     width: 100%;
     height: 100%;
-    border-radius: 50%;
+    border-radius: none;
 }
 #avatarOverlay:hover,
 #avatarOverlay:focus {
@@ -3150,17 +3145,6 @@ input:checked + .toggleSwitchSlider:before {
 
 #settingsMediaContainer {
     position: relative;
-}
-
-/* Settings icon colors. */
-#settingsSVG {
-    stroke: #ffffff;
-    height: 15px;
-}
-.menuButton:hover #settingsSVG,
-.menuButton:focus #settingsSVG,
-.menuButton:active #settingsSVG {
-    height: 23px;
 }
 
 
@@ -3400,6 +3384,7 @@ box-sizing: border-box;
     padding: 0px;
     transition: 0.25s ease;
     outline: none;
+    justify-content: center;
 }
 #launch_button:hover,
 #launch_button:focus {
@@ -3961,3 +3946,154 @@ box-sizing: border-box;
 .rotating {
     animation: rotating 10s linear infinite;
 }
+
+
+/*******************************************************************************
+ *                                                                             *
+ *                                                                             *
+ * Menú Principal (#main)                                                      *
+ *                                                                             *
+ *                                                                             *
+ ******************************************************************************/
+
+
+ 
+/*******************************************************************************
+ *                                                                             *
+ * BARMENU | Barra de menú en la página principal                              *
+ *                                                                             *
+ ******************************************************************************/
+
+    /*******************************************************************************
+    * BARMENU - Estructura y general | Estructura de la barra de menú              *
+    *******************************************************************************/
+
+/* Barra de menú: Contenedor principal que envuelve todo el contenido del menú (tanto izquierda como derecha) */
+#barmenu {
+    flex-direction: row;
+    height: 50px;
+    width: auto;
+    display: inline-flex;
+    justify-content: center;
+}
+
+/* Barra de menú derecha: Contenedor del botón de noticias y el contenido del usuario (avatar, nombre, etc) */
+#bar_right {
+    width: auto;
+    height: 40px;
+    /* 1. Fondo blanco semitransparente (ajusta el 0.15 según qué tan blanco lo quieras) */
+    background-color: rgba(255, 255, 255, 0.15); 
+    /* Efecto cristal opcional (desenfoca lo que hay detrás del contenedor) */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    /* 2. Bordes redondeados asimétricos: 
+       (Arriba-Izquierda, Arriba-Derecha, Abajo-Derecha, Abajo-Izquierda) */
+    border-radius: 15px 3px 3px 15px;  
+    /* Borde sutil blanco (puedes quitar el lado derecho si quieres que se fusione) */
+    border: 2px solid rgb(255, 255, 255);
+    border-right: 2px solid rgb(255, 255, 255); /* Elimina el borde derecho para que se fusione con el fondo */    
+    /* 3. REGLA DE ORO: Corta y oculta TODO lo que intente salirse de esta caja */
+    overflow: hidden; 
+    /* Estructura base para que el contenido se alinee adentro */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-sizing: border-box; /* Evita que el contenedor crezca a lo loco si le pones padding */
+}
+
+#bar_left {
+    width: 240px;
+    height: 40px;
+    /* 1. Fondo blanco semitransparente (ajusta el 0.15 según qué tan blanco lo quieras) */
+    background-color: rgba(255, 255, 255, 0.15); 
+    /* Efecto cristal opcional (desenfoca lo que hay detrás del contenedor) */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    /* 2. Bordes redondeados asimétricos: 
+       (Arriba-Izquierda, Arriba-Derecha, Abajo-Derecha, Abajo-Izquierda) */
+    border-radius: 3px 15px 15px 3px; 
+    /* Borde sutil blanco (puedes quitar el lado derecho si quieres que se fusione) */
+    border: 2px solid rgb(255, 255, 255);
+    border-left: 2px solid rgb(255, 255, 255); /* Elimina el borde derecho para que se fusione con el fondo */
+    /* 3. REGLA DE ORO: Corta y oculta TODO lo que intente salirse de esta caja */
+    overflow: hidden; 
+    /* Estructura base para que el contenido se alinee adentro */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box; /* Evita que el contenedor crezca a lo loco si le pones padding */
+}
+
+.barmenuClass {
+    background: none;
+    border: none;
+    padding: 0px;
+    display: flex;
+    align-items: center;
+    outline: none;
+}
+
+.barright_divider {
+    height: 40px;
+    width: 2px;
+    background: rgb(255, 255, 255);
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.barmenu_divider {
+    height: 35px;
+    width: 2px;
+    background: none;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+/*******************************************************************************
+ * BAR_RIGHT | Lado derecho de la barra de menú                                *
+ ******************************************************************************/
+
+        /* =========================================
+        BOTÓN DE AJUSTES (Cuadrado 35x35)
+        ========================================= */
+
+#settingsButtonContainer {
+    width: 35px;
+    height: 35px;
+    /* Flexbox centra el icono del engranaje perfectamente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Márgenes para que no esté pegado ni al avatar ni al botón de Play */
+    margin: 0px; 
+    /* Diseño del cuadrado */
+    background: none; 
+    border: none;
+    border-radius: 8px; /* Curva suave, ajusta si lo quieres más cuadrado */
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Settings icon colors. */
+#settingsSVG {
+    fill: #ffffff;
+    height: 30px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+/* Settings icon colors. */
+#settingsSVG:hover {
+    transform: rotate(45deg);
+    fill: #ffffff;   
+}
+
+
+/*******************************************************************************
+ * BAR_LEFT | Lado izquierdo de la barra de menú                                *
+ ******************************************************************************/
+
+        /* =========================================
+        BOTÓN DE INICIO (Rectangulo 120x35)
+        ========================================= */

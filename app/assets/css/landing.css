@@ -1,0 +1,107 @@
+/*******************************************************************************
+ *                                                                             *
+ * Landing Estructura                                                          *
+ *                                                                             *
+ ******************************************************************************/
+
+ /* Contenedor general. */
+ #landingContainer {
+    height: 100%;
+    position: relative;
+    transition: background 2s ease;
+    overflow: hidden;
+}
+
+/*******************************************************************************
+ * Landing estructura superior.                                                          *
+ ******************************************************************************/
+
+ /* Contenedor superior. */
+#landingContainer > #upper {
+    position: relative;
+    transition: top 2s ease;
+    top: 0px;
+    height: 77%;
+    display: flex;
+}
+ /* Contenedor superior izquierdo. */
+#landingContainer > #upper > #left {
+    display: inline-flex;
+    width: 15%;
+    height: 100%;
+    justify-content: flex-end;justify-content: flex-end;
+}
+ /* Contenido del contenedor superior izquierdo. */
+#landingContainer > #upper > #left > #content {
+    display: inline-flex;
+    width: 15%;
+    height: 100%;
+    justify-content: center;
+}
+ /* Contenedor superior central. */
+#landingContainer > #upper > #center {
+    display: inline-flex;
+    width: 70%;
+    height: 100%;
+}
+ /* Contenedor superior derecho. */
+#landingContainer > #upper > #right {
+    display: inline-grid;
+    width: 15%;
+    height: 100%;
+    justify-content: flex-start;
+}
+ /* Contenido del contenedor superior derecho. */
+#landingContainer > #upper > #right > #content {
+    display: inline-flex;
+    width: 15%;
+    height: 100%;
+    justify-content: center;
+}
+
+/*******************************************************************************
+ * Landing estructura inferior.                                                *
+ ******************************************************************************/
+
+ /* Contenedor inferior. */
+#landingContainer > #lower {
+    height: 23%;
+    display: flex;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
+/* Contenedor inferior izquierdo. */
+#landingContainer > #lower > #left {
+    position: relative;
+    transition: top 2s ease;
+    top: 0px;
+    height: 100%;
+    width: 33%;
+    display: inline-flex;
+    justify-content: center;
+}
+/* Contenedor inferior central. */
+#landingContainer > #lower > #center {
+    position: relative;
+    transition: top 2s ease;
+    top: 0px;
+    height: 100%;
+    width: 34%;
+    display: inline-flex;
+    justify-content: center;
+}
+/* Contenido del contenedor inferior central. */
+#landingContainer > #lower > #center #content {
+    position: relative;
+    z-index: 500;
+    transition: top 2s ease;
+    top: 10px;
+}
+/* Contenedor inferior derecho. */
+#landingContainer > #lower > #right {
+    position: relative;
+    transition: top 2s ease;
+    top: 0px;
+    height: 100%;
+    width: 33%;
+    display: inline-flex;
+}

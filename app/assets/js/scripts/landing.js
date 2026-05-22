@@ -38,7 +38,7 @@ const launch_progress         = document.getElementById('launch_progress')
 const launch_progress_label   = document.getElementById('launch_progress_label')
 const launch_details_text     = document.getElementById('launch_details_text')
 const server_selection_button = document.getElementById('server_selection_button')
-const user_text               = document.getElementById('user_text')
+const avatarOverlay           = document.getElementById('avatarOverlay')
 
 const loggerLanding = LoggerUtil.getLogger('Landing')
 
@@ -152,7 +152,7 @@ function updateSelectedAccount(authUser){
             document.getElementById('avatarContainer').style.backgroundImage = `url('https://mc-heads.net/avatar/${authUser.uuid}/')`
         }
     }
-    user_text.innerHTML = username
+    avatarOverlay.innerHTML = username
 }
 updateSelectedAccount(ConfigManager.getSelectedAccount())
 
