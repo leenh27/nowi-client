@@ -1,9 +1,9 @@
 {
   "name": "nowi-client",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "productName": "Nowi Client",
   "description": "Un iniciador de Minecraft moderno, rápido y fácil de usar.",
-  "author": "leenh",
+  "author": "leenh27",
   "license": "UNLICENSED",
   "private": true,
   "main": "index.js",

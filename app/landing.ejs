@@ -1,22 +1,18 @@
 <div id="landingContainer" style="display: none;">
     <div id="upper">
         <div id="left">
-            <div id="image_seal_container" style="display: none;">
-                <img id="image_seal" src="assets/images/SealCircle.png"/>
-                <div id="updateAvailableTooltip"><%- lang('landing.updateAvailableTooltip') %></div>
+            <div id="container">
             </div>
         </div>
         <div id="center">
         </div>
         <div id="right">  
-            <div class="bot_wrapper">     
-                <div id="rightContainer">
-                    <div id="content">
-                        <button id="newsButton">
-                            <img src="assets/images/icons/news-icon.svg" id="newsButtonSVG"/>
-                            <div id="newsButtonAlert" style="display: none;"></div>
-                        </button>
-                    </div>
+            <div id="rightContainer">
+                <div id="content">
+                    <button id="newsButton">
+                        <img src="assets/images/icons/news-icon.svg" id="newsButtonSVG"/>
+                        <div id="newsButtonAlert" style="display: none;"></div>
+                    </button>
                 </div>
             </div>               
         </div>
@@ -170,6 +166,11 @@
         <button id="server_selection_button" class="bot_label">
             <%- lang('landing.launchButtonPlaceholder') %>
         </button>
+        <!--ELIMINAR | Botón de actualización -->
+        <div id="image_seal_container" style="display: none;">
+            <img id="image_seal" src="assets/images/SealCircle.png"/>
+            <div id="updateAvailableTooltip"><%- lang('landing.updateAvailableTooltip') %></div>
+        </div>
     </div>
     <script src="./assets/js/scripts/landing.js"></script>
 </div>

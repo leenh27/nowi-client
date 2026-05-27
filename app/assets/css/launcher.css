@@ -79,7 +79,7 @@ body, button {
     display: flex;
     flex-direction: column;
     transition: background-color 1s ease;
-    /*background-color: rgba(0, 0, 0, 0.5);*/
+    background-color: rgb(0, 0, 0);
     -webkit-user-select: none;
 }
 
@@ -237,7 +237,8 @@ body, button {
     align-items: center;
     height: 100%;
     width: 100%;
-    background: rgba(0, 0, 0, 0.50);
+    background: rgba(0, 0, 0, 0.808);
+    overflow: hidden;
 }
 
 #welcomeContent {
@@ -245,7 +246,7 @@ body, button {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 50%;
+    width: 75%;
     top: -10%;
     position: relative;
 }
@@ -287,24 +288,21 @@ body, button {
 }
 */
 
-#welcomeImageSeal {
-    border-radius: 50%;
-    border: 2px solid #cad7e1;
-    background: rgba(1, 2, 1, 0.5);
-    height: 125px;
-    width: 125px;
-    box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+#welcomeImage {
+    background: rgba(0, 0, 0, 0);
+    height: auto;
+    width: auto;
     margin-bottom: 5%;
     margin-top: 10%;
 }
 
 #welcomeHeader {
-    font-family: 'Avenir Medium';
+    font-family: 'Microsoft Himalaya';
     text-align: center;
     color: white;
     margin-bottom: 25px;
     letter-spacing: 1px;
-    font-size: 20px;
+    font-size: 35px;
     text-shadow: white 0px 0px 0px;
 }
 
@@ -312,6 +310,7 @@ body, button {
     text-align: justify;
     font-size: 13px;
     font-weight: 100;
+    width: 50%;
     text-shadow: rgba(255, 255, 255, 0.75) 0px 0px 20px
 }
 
@@ -2456,92 +2455,6 @@ input:checked + .toggleSwitchSlider:before {
 
 /*******************************************************************************
  *                                                                             *
- * Landing View (Structural Styles)                                            *
- *                                                                             *
- ******************************************************************************/
-
-/* Main content container. */
-#landingContainer {
-    height: 100%;
-    position: relative;
-    transition: background 2s ease;
-    overflow: hidden;
-}
-
-/* Upper content container. */
-#landingContainer > #upper {
-    position: relative;
-    transition: top 2s ease;
-    top: 0px;
-    height: 77%;
-    display: flex;
-}
-#landingContainer > #upper > #left {
-    display: inline-flex;
-    width: 15%;
-    height: 100%;
-    justify-content: flex-end;
-}
-#landingContainer > #upper > #center {
-    display: inline-flex;
-    width: 70%;
-    height: 100%;
-    justify-content: center;    
-}
-#landingContainer > #upper > #right {
-    display: inline-grid;
-    width: 15%;
-    height: 100%;
-}
-
-/* Lower content container. */
-#landingContainer > #lower {
-    height: 23%;
-    display: flex;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-}
-#landingContainer > #lower > #left {
-    position: relative;
-    transition: top 2s ease;
-    top: 0px;
-    height: 100%;
-    width: 15%;
-    display: inline-flex;
-    justify-content: center;
-}
-#landingContainer > #lower > #left #content {
-    position: relative;
-    top: 25px;
-    display: inline-flex;
-    line-height: 24px;
-    left: 50px;
-}
-#landingContainer > #lower > #center {
-    position: relative;
-    transition: top 2s ease;
-    top: 0px;
-    height: 100%;
-    width: 70%;
-    display: inline-flex;
-    justify-content: center;
-}
-#landingContainer > #lower > #center #content {
-    position: relative;
-    z-index: 500;
-    transition: top 2s ease;
-    top: 10px;
-}
-#landingContainer > #lower > #right {
-    position: relative;
-    transition: top 2s ease;
-    top: 0px;
-    height: 100%;
-    width: 15%;
-    display: inline-flex;
-}
-
-/*******************************************************************************
- *                                                                             *
  * Landing View (News Styles)                                                  *
  *                                                                             *
  ******************************************************************************/
@@ -3011,16 +2924,6 @@ input:checked + .toggleSwitchSlider:before {
 * Landing View (Bottom Styles) | Right Content
 * * */
 
-/*  Wrapper container for top, right content. */
-#rightContainer {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    top: 10px;
-    height: calc(100% - 50px);
-}
-
 /* Right hand user content container. */
 #user_content {
     display: flex;
@@ -3402,7 +3305,7 @@ box-sizing: border-box;
 
 /* Launch details main container, hidden until launch processing begins. */
 #launch_details {
-    position: relative;
+    position: flex;
     top: 25px;
     display: none;
 }
@@ -3951,11 +3854,118 @@ box-sizing: border-box;
 /*******************************************************************************
  *                                                                             *
  *                                                                             *
- * Menú Principal (#main)                                                      *
+ * Menú Principal (LANDING)                                                      *
  *                                                                             *
  *                                                                             *
  ******************************************************************************/
 
+/*******************************************************************************
+ *                                                                             *
+ * Landing Estructura                                                          *
+ *                                                                             *
+ ******************************************************************************/
+
+ /* Contenedor general. */
+ #landingContainer {
+    height: 100%;
+    position: relative;
+    transition: background 2s ease;
+    overflow: hidden;
+}
+
+/*******************************************************************************
+ * Landing estructura superior.                                                          *
+ ******************************************************************************/
+
+ /* Contenedor superior. */
+#landingContainer > #upper {
+    position: relative;
+    transition: top 2s ease;
+    top: 0px;
+    height: 77%;
+    display: flex;
+}
+ /* Contenedor superior izquierdo. */
+#landingContainer > #upper > #left {
+    display: flex;
+    width: 15%;
+    height: 100%;
+    justify-content: flex-end;justify-content: flex-end;
+}
+ /* Contenido del contenedor superior izquierdo. */
+#landingContainer > #upper > #left > #content {
+    display: flex;
+    width: 15%;
+    height: 100%;
+    justify-content: center;
+}
+ /* Contenedor superior central. */
+#landingContainer > #upper > #center {
+    display: inline-flex;
+    width: 70%;
+    height: 100%;
+}
+ /* Contenedor superior derecho. */
+#landingContainer > #upper > #right {
+    display: inline-grid;
+    width: 15%;
+    height: 100%;
+    justify-content: flex-start;
+}
+ /* Contenido del contenedor superior derecho. */
+#landingContainer > #upper > #right > #content {
+    display: inline-flex;
+    width: 15%;
+    height: 100%;
+    justify-content: center;
+}
+
+/*******************************************************************************
+ * Landing estructura inferior.                                                *
+ ******************************************************************************/
+
+ /* Contenedor inferior. */
+#landingContainer > #lower {
+    height: 23%;
+    display: flex;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
+/* Contenedor inferior izquierdo. */
+#landingContainer > #lower > #left {
+    position: relative;
+    transition: top 2s ease;
+    top: 0px;
+    height: 100%;
+    width: 33%;
+    display: inline-flex;
+    justify-content: center;
+}
+/* Contenedor inferior central. */
+#landingContainer > #lower > #center {
+    position: relative;
+    transition: top 2s ease;
+    top: 0px;
+    height: 100%;
+    width: 34%;
+    display: inline-flex;
+    justify-content: center;
+}
+/* Contenido del contenedor inferior central. */
+#landingContainer > #lower > #center #content {
+    position: relative;
+    z-index: 500;
+    transition: top 2s ease;
+    top: 10px;
+}
+/* Contenedor inferior derecho. */
+#landingContainer > #lower > #right {
+    position: relative;
+    transition: top 2s ease;
+    top: 0px;
+    height: 100%;
+    width: 33%;
+    display: inline-flex;
+}
 
  
 /*******************************************************************************
